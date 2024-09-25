@@ -1,5 +1,6 @@
 package org.example.jobhunter.controller;
 
+import org.example.jobhunter.exception.IdInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,14 @@ public class UserController {
 
     // Read User
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable long id){
-        User user = this.userService.handleFetchUserById(id);
+    public ResponseEntity<User> getUser(@PathVariable String id) throws IdInvalidException {
+        int userId;
+        try {
+            userId = Integer.parseInt(id);
+        }catch (Exception e){
+            throw new IdInvalidException("id must be an integer");
+        }
+        User user = this.userService.handleFetchUserById(userId);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
     @GetMapping("/users")
@@ -44,8 +51,14 @@ public class UserController {
 
     // Delete User
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id){
-        this.userService.handleDeleteUser(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") String id) throws IdInvalidException {
+        int userId;
+        try {
+            userId = Integer.parseInt(id);
+        }catch (Exception e){
+            throw new IdInvalidException("id must be an integer");
+        }
+        this.userService.handleDeleteUser(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
