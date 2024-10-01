@@ -2,6 +2,8 @@ package org.example.jobhunter.service;
 
 import org.example.jobhunter.domain.User;
 import org.example.jobhunter.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,8 @@ public class UserService {
     }
 
     public User handleCreateUser(User user) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -27,7 +31,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public List<User> handlefetchAllUser(){
+    public List<User> handleFetchAllUser(){
         return userRepository.findAll();
     }
 
@@ -45,6 +49,10 @@ public class UserService {
             }
             return this.userRepository.save(currentUser);
         }
-        return currentUser;
+        return null;
+    }
+
+    public User handleFetchUserByUsername(String username) {
+        return this.userRepository.findByEmail(username);
     }
 }
