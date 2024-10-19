@@ -10,6 +10,7 @@ import org.example.jobhunter.service.UserService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
 
