@@ -1,51 +1,59 @@
 package org.example.jobhunter.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.jobhunter.util.SecurityUtil;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "companies")
+@Table(name = "jobs")
 @Getter
 @Setter
-public class Company {
+public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "Company name is not blank")
     private String name;
-
+    private String location;
+    private double salary;
+    private int quantity;
+    @Enumerated(EnumType.STRING)
+    private LevelEnum level;
     @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
+    private Date startDate;
+    private Date endDate;
+    private boolean isActive;
 
-    private String address;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
-    private String logo;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Job> jobs;
+    @JoinTable(name = "job_skill",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    private List<Skill> skills;
 
     private Instant createdAt;
-
     private Instant updatedAt;
-
     private String createdBy;
-
     private String updatedBy;
 
-    @OneToMany(mappedBy = "company")
-    @JsonIgnore
-    private List<User> users;
+    public enum LevelEnum {
+        INTERN, FRESHER, MIDDLE, SENIOR
+    }
 
     @PrePersist
     public void handleBeforeCreate(){

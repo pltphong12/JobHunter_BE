@@ -39,7 +39,7 @@ public class ResUserDTO {
         private String name;
     }
 
-    public ResUserDTO(long id, @NotBlank(message = "Email isn't blank") String email, String name, User.GenderEnum gender, String address, int age, Instant updatedAt, Instant createdAt) {
+    public ResUserDTO(long id, @NotBlank(message = "Email isn't blank") String email, String name, User.GenderEnum gender, String address, int age, Instant updatedAt, Instant createdAt, ResCompany company) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -48,5 +48,6 @@ public class ResUserDTO {
         this.age = age;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
+        this.company = company;
     }
 }

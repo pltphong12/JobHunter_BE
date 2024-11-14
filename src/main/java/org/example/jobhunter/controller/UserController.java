@@ -79,12 +79,17 @@ public class UserController {
     // Update User
     @PutMapping("/users")
     @ApiMessage(value = "update a user")
-    public ResponseEntity<User> updateUser( @RequestBody User updatedUser) throws BadCredentialsException{
+    public ResponseEntity<ResUserDTO> updateUser( @RequestBody User updatedUser) throws BadCredentialsException{
         if (userService.handleFetchUserById(updatedUser.getId()) == null) {
             throw new BadCredentialsException("user does not exist");
         }
         User user = this.userService.handleUpdateUser(updatedUser);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        ResUserDTO resUserDTO = modelMapper.map(user, ResUserDTO.class);
+        if (user.getCompany() != null) {
+            ResUserDTO.ResCompany resCompany = modelMapper.map(user.getCompany(), ResUserDTO.ResCompany.class);
+            resUserDTO.setCompany(resCompany);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(resUserDTO);
     }
 
     // Delete User

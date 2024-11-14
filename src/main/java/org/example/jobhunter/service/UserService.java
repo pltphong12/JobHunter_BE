@@ -75,7 +75,11 @@ public class UserService {
                 item.getAddress(),
                 item.getAge(),
                 item.getUpdatedAt(),
-                item.getCreatedAt()
+                item.getCreatedAt(),
+                new ResUserDTO.ResCompany(
+                        item.getCompany() != null ? item.getCompany().getId() : 0,
+                        item.getCompany() != null ? item.getCompany().getName() : null
+                )
         )).collect(Collectors.toList());
 
         rs.setResult(listUser);
@@ -100,7 +104,7 @@ public class UserService {
             }
             Company company = this.companyRepository.findById(user.getCompany().getId()).orElse(null);
             if (user.getCompany() != null && company != null){
-                currentUser.setCompany(user.getCompany());
+                currentUser.setCompany(company);
             }
             return this.userRepository.save(currentUser);
         }

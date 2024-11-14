@@ -1,22 +1,27 @@
 package org.example.jobhunter.service;
 
 import org.example.jobhunter.domain.Company;
+import org.example.jobhunter.domain.User;
 import org.example.jobhunter.domain.response.ResPaginationDTO;
 import org.example.jobhunter.repository.CompanyRepository;
+import org.example.jobhunter.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
-    public CompanyService(CompanyRepository companyRepository) {
+    public CompanyService(CompanyRepository companyRepository, UserRepository userRepository) {
         this.companyRepository = companyRepository;
+        this.userRepository = userRepository;
     }
 
     public Company handleCreateCompany(Company company) {
@@ -58,6 +63,11 @@ public class CompanyService {
     }
 
     public void handleDeleteCompany(long id ) {
+        Optional<Company> currentCompany = this.companyRepository.findById(id);
+        if (currentCompany.isPresent()) {
+            List<User> users = currentCompany.get().getUsers();
+            this.userRepository.deleteAll(users);
+        }
         this.companyRepository.deleteById(id);
     }
 }
