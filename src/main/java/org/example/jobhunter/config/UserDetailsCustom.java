@@ -1,6 +1,7 @@
-package org.example.jobhunter.service;
+package org.example.jobhunter.config;
 
 
+import org.example.jobhunter.service.UserService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.example.jobhunter.util.SecurityUtil;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "companies")
@@ -29,25 +30,26 @@ public class Company {
 
     private String logo;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
-    private Instant creationAt;
+    private Instant createdAt;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
-    private Instant updateAt;
+    private Instant updatedAt;
 
     private String createdBy;
 
     private String updatedBy;
 
+    @OneToMany(mappedBy = "company")
+    private List<User> users;
+
     @PrePersist
     public void handleBeforeCreate(){
-        creationAt = Instant.now();
+        createdAt = Instant.now();
         createdBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
     }
 
     @PreUpdate
     public void handleBeforeUpdate(){
-        updateAt = Instant.now();
+        updatedAt = Instant.now();
         updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
     }
 }

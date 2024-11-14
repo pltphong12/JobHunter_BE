@@ -1,8 +1,7 @@
 package org.example.jobhunter.service;
 
 import org.example.jobhunter.domain.Company;
-import org.example.jobhunter.domain.DTO.Meta;
-import org.example.jobhunter.domain.DTO.ResPaginationDTO;
+import org.example.jobhunter.domain.response.ResPaginationDTO;
 import org.example.jobhunter.repository.CompanyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +25,7 @@ public class CompanyService {
 
     public ResPaginationDTO handleFetchAllCompanies(Specification<Company> spec, Pageable pageable) {
         ResPaginationDTO resPaginationDTO = new ResPaginationDTO();
-        Meta meta = new Meta();
+        ResPaginationDTO.Meta meta = new ResPaginationDTO.Meta();
         Page<Company> companies = this.companyRepository.findAll(spec, pageable);
         meta.setPage(pageable.getPageNumber() + 1);
         meta.setPageSize(pageable.getPageSize());

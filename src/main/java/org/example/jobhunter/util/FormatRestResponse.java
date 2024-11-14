@@ -1,7 +1,7 @@
 package org.example.jobhunter.util;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.jobhunter.domain.RestResponse;
+import org.example.jobhunter.domain.response.RestResponse;
 import org.example.jobhunter.util.anotation.ApiMessage;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

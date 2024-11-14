@@ -3,7 +3,7 @@ package org.example.jobhunter.controller;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import org.example.jobhunter.domain.Company;
-import org.example.jobhunter.domain.DTO.ResPaginationDTO;
+import org.example.jobhunter.domain.response.ResPaginationDTO;
 import org.example.jobhunter.exception.IdInvalidException;
 import org.example.jobhunter.service.CompanyService;
 import org.example.jobhunter.util.anotation.ApiMessage;
@@ -24,6 +24,7 @@ public class CompanyController {
     }
 
     @PostMapping("/companies")
+    @ApiMessage(value = "create a company")
     public ResponseEntity<Company> addCompany(@Valid @RequestBody Company createCompany) {
         Company company = this.companyService.handleCreateCompany(createCompany);
         return ResponseEntity.status(HttpStatus.CREATED).body(company);
@@ -40,6 +41,7 @@ public class CompanyController {
     }
 
     @PutMapping("/companies")
+    @ApiMessage(value = "update a company")
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company updateCompany) {
         Company company = this.companyService.handleUpdateCompany(updateCompany);
         return ResponseEntity.status(HttpStatus.OK).body(company);
@@ -47,6 +49,7 @@ public class CompanyController {
 
 
     @DeleteMapping("/companies/{id}")
+    @ApiMessage(value = "delete a company")
     public ResponseEntity<Void> deleteCompany(@PathVariable String id) throws IdInvalidException {
         long companyId;
         try {

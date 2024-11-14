@@ -1,6 +1,6 @@
 package org.example.jobhunter.exception;
 
-import org.example.jobhunter.domain.RestResponse;
+import org.example.jobhunter.domain.response.RestResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +20,8 @@ import java.util.stream.Collectors;
 public class GlobalException {
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            IdInvalidException.class
     })
     public ResponseEntity<RestResponse<Object>> handleException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
@@ -30,14 +32,14 @@ public class GlobalException {
     }
 
     @ExceptionHandler(value = {
-            IdInvalidException.class,
+            NoResourceFoundException.class,
     })
     public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
-        res.setStatus(HttpStatus.BAD_REQUEST.value());
+        res.setStatus(HttpStatus.NOT_FOUND.value());
         res.setError(ex.getMessage());
-        res.setMessage("Exception occurs...");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+        res.setMessage("404 not found. url does not exist");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
