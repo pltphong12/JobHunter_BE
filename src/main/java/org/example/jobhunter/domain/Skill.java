@@ -2,6 +2,7 @@ package org.example.jobhunter.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.jobhunter.util.SecurityUtil;
@@ -17,7 +18,7 @@ public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    @NotBlank(message = "name isn't blank")
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")

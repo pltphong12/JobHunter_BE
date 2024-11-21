@@ -1,0 +1,103 @@
+package org.example.jobhunter.service;
+
+import org.example.jobhunter.domain.Job;
+import org.example.jobhunter.domain.Skill;
+import org.example.jobhunter.domain.response.ResPaginationDTO;
+import org.example.jobhunter.repository.JobRepository;
+import org.example.jobhunter.repository.SkillRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class JobService {
+
+    private final JobRepository jobRepository;
+    private final SkillRepository skillRepository;
+
+    public JobService(JobRepository jobRepository, SkillRepository skillRepository) {
+        this.jobRepository = jobRepository;
+        this.skillRepository = skillRepository;
+    }
+
+    public Job handleCreateJob(Job job) {
+        List<Skill> skills = job.getSkills();
+        skills.removeIf(skill -> this.skillRepository.findById(skill.getId()) == null);
+//        for (Skill skill : skills) {
+//            if (this.skillRepository.findById(skill.getId()) == null) {
+//                skills.remove(skill);
+//            }
+//        }
+        job.setSkills(skills);
+        return this.jobRepository.save(job);
+    }
+
+    public Job handleUpdateJob(Job job) {
+        Optional<Job> currentJob = this.jobRepository.findById(job.getId());
+        if (currentJob.isPresent()) {
+            if (job.getName() != null){
+                currentJob.get().setName(job.getName());
+            }
+            if (job.getLocation() != null){
+                currentJob.get().setLocation(job.getLocation());
+            }
+            if (job.getSalary() != 0){
+                currentJob.get().setSalary(job.getSalary());
+            }
+            if (job.getQuantity() != 0){
+                currentJob.get().setQuantity(job.getQuantity());
+            }
+            if (job.getLevel() != null){
+                currentJob.get().setLevel(job.getLevel());
+            }
+            if (job.getDescription() != null){
+                currentJob.get().setDescription(job.getDescription());
+            }
+            if (job.getStartDate() != null){
+                currentJob.get().setStartDate(job.getStartDate());
+            }
+            if (job.getEndDate() != null){
+                currentJob.get().setEndDate(job.getEndDate());
+            }
+            job.setActive(job.isActive());
+            if (job.getCompany() != null){
+                currentJob.get().setCompany(job.getCompany());
+            }
+            if (job.getSkills() != null){
+                List<Skill> skillList = job.getSkills();
+                skillList.removeIf(skill -> this.skillRepository.findById(skill.getId()) == null);
+                job.setSkills(skillList);
+            }
+            return this.jobRepository.save(job);
+        }
+        return null;
+    }
+
+    public ResPaginationDTO handleFetchAllJob(Specification<Job> spec, Pageable pageable) {
+        ResPaginationDTO rs = new ResPaginationDTO();
+        Page<Job> pageJob = this.jobRepository.findAll(spec, pageable);
+        ResPaginationDTO.Meta mt = new ResPaginationDTO.Meta();
+        mt.setPage(pageable.getPageNumber() + 1);
+        mt.setPageSize(pageJob.getSize());
+
+        mt.setPages(pageJob.getTotalPages());
+        mt.setTotal(pageJob.getTotalElements());
+
+        rs.setMeta(mt);
+        rs.setResult(pageJob.getContent());
+        return rs;
+    }
+
+    public Job handleFetchAJob(long id){
+        Optional<Job> currentJob = this.jobRepository.findById(id);
+        return currentJob.orElse(null);
+    }
+
+    public void handleDeleteAJob(long id){
+        this.jobRepository.deleteById(id);
+    }
+}

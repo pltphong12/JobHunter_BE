@@ -1,6 +1,7 @@
 package org.example.jobhunter.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,16 +32,14 @@ public class Job {
     private String description;
     private Date startDate;
     private Date endDate;
-    private boolean isActive;
+    private boolean active;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
-
-
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"jobs"})
     @JoinTable(name = "job_skill",
             joinColumns = @JoinColumn(name = "job_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id"))
