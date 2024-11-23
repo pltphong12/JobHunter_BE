@@ -1,5 +1,6 @@
 package org.example.jobhunter.exception;
 
+import org.apache.coyote.BadRequestException;
 import org.example.jobhunter.domain.response.RestResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,8 @@ public class GlobalException {
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
             BadCredentialsException.class,
-            IdInvalidException.class
+            IdInvalidException.class,
+            BadRequestException.class,
     })
     public ResponseEntity<RestResponse<Object>> handleException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
@@ -34,12 +36,23 @@ public class GlobalException {
     @ExceptionHandler(value = {
             NoResourceFoundException.class,
     })
-    public ResponseEntity<RestResponse<Object>> handleIdException(Exception ex) {
+    public ResponseEntity<RestResponse<Object>> handleNoResourceException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
         res.setStatus(HttpStatus.NOT_FOUND.value());
         res.setError(ex.getMessage());
         res.setMessage("404 not found. url does not exist");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+    }
+
+    @ExceptionHandler(value = {
+            StogareException.class
+    })
+    public ResponseEntity<RestResponse<Object>> handleStorage(Exception ex) {
+        RestResponse<Object> res = new RestResponse<>();
+        res.setStatus(HttpStatus.BAD_REQUEST.value());
+        res.setError(ex.getMessage());
+        res.setMessage("Exception upload file");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

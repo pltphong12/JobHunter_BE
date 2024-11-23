@@ -50,6 +50,10 @@ public class Job {
     private String createdBy;
     private String updatedBy;
 
+    @OneToMany(mappedBy = "job")
+    @JsonIgnore
+    private List<Resume> resumes;
+
     public enum LevelEnum {
         INTERN, FRESHER, MIDDLE, SENIOR
     }
