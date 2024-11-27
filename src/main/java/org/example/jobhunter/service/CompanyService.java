@@ -70,4 +70,9 @@ public class CompanyService {
         }
         this.companyRepository.deleteById(id);
     }
+
+    public Company handleGetCompanyById(long id) {
+        Optional<Company> currentCompany = this.companyRepository.findById(id);
+        return currentCompany.orElse(null);
+    }
 }

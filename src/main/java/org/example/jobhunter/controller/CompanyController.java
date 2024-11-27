@@ -40,6 +40,12 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(companies);
     }
 
+    @GetMapping("/companies/{id}")
+    @ApiMessage(value = "fetch a company")
+    public ResponseEntity<Company> getACompanyById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.companyService.handleGetCompanyById(id));
+    }
+
     @PutMapping("/companies")
     @ApiMessage(value = "update a company")
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company updateCompany) {
