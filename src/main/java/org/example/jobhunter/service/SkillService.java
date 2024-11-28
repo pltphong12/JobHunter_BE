@@ -40,8 +40,8 @@ public class SkillService {
         return null;
     }
 
-    public Skill handleFetchASkill(long id) {
-        return this.skillRepository.findById(id).get();
+    public Optional<Skill> handleFetchASkill(long id) {
+        return this.skillRepository.findById(id);
     }
 
     public ResPaginationDTO handleFetchAllSkills(Specification<Skill> spec, Pageable pageable) {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -40,9 +41,9 @@ public class JobController {
         List<Skill> skills = newJob.getSkills();
         List<String> skillList = new ArrayList<>();
         for (Skill skill : skills) {
-                Skill fetchASkill = this.skillService.handleFetchASkill(skill.getId());
-                if (fetchASkill != null) {
-                    skillList.add(fetchASkill.getName());
+                Optional<Skill> fetchASkill = this.skillService.handleFetchASkill(skill.getId());
+                if (fetchASkill.isPresent()) {
+                    skillList.add(fetchASkill.get().getName());
                 }
         }
         Job job = this.jobService.handleCreateJob(newJob);
@@ -59,9 +60,9 @@ public class JobController {
         List<Skill> skills = newJob.getSkills();
         List<String> skillList = new ArrayList<>();
         for (Skill skill : skills) {
-            Skill fetchASkill = this.skillService.handleFetchASkill(skill.getId());
-            if (fetchASkill != null) {
-                skillList.add(fetchASkill.getName());
+            Optional<Skill> fetchASkill = this.skillService.handleFetchASkill(skill.getId());
+            if (fetchASkill.isPresent()) {
+                skillList.add(fetchASkill.get().getName());
             }
         }
         Job job = this.jobService.handleUpdateJob(newJob);
@@ -90,9 +91,9 @@ public class JobController {
         List<Skill> skills = job.getSkills();
         List<String> skillList = new ArrayList<>();
         for (Skill skill : skills) {
-            Skill fetchASkill = this.skillService.handleFetchASkill(skill.getId());
-            if (fetchASkill != null) {
-                skillList.add(fetchASkill.getName());
+            Optional<Skill> fetchASkill = this.skillService.handleFetchASkill(skill.getId());
+            if (fetchASkill.isPresent()) {
+                skillList.add(fetchASkill.get().getName());
             }
         }
         resJobDTO.setSkills(skillList);

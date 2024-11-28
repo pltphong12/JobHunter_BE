@@ -1,8 +1,10 @@
 package org.example.jobhunter.service;
 
+import org.example.jobhunter.domain.Company;
 import org.example.jobhunter.domain.Job;
 import org.example.jobhunter.domain.Skill;
 import org.example.jobhunter.domain.response.ResPaginationDTO;
+import org.example.jobhunter.repository.CompanyRepository;
 import org.example.jobhunter.repository.JobRepository;
 import org.example.jobhunter.repository.SkillRepository;
 import org.springframework.data.domain.Page;
@@ -18,20 +20,28 @@ public class JobService {
 
     private final JobRepository jobRepository;
     private final SkillRepository skillRepository;
+    private final CompanyRepository companyRepository;
 
-    public JobService(JobRepository jobRepository, SkillRepository skillRepository) {
+    public JobService(JobRepository jobRepository, SkillRepository skillRepository, CompanyRepository companyRepository) {
         this.jobRepository = jobRepository;
         this.skillRepository = skillRepository;
+        this.companyRepository = companyRepository;
     }
 
     public Job handleCreateJob(Job job) {
         List<Skill> skills = job.getSkills();
-        skills.removeIf(skill -> this.skillRepository.findById(skill.getId()) == null);
-//        for (Skill skill : skills) {
-//            if (this.skillRepository.findById(skill.getId()) == null) {
-//                skills.remove(skill);
-//            }
-//        }
+        for (Skill skill : skills) {
+            Optional<Skill> s = this.skillRepository.findById(skill.getId());
+            if (!s.isPresent()) {
+                skills.remove(skill);
+            }
+        }
+        Company company = this.companyRepository.findById(job.getCompany().getId()).orElse(null);
+        if (company == null) {
+            job.setCompany(new Company());
+        }else {
+            job.setCompany(company);
+        }
         job.setSkills(skills);
         return this.jobRepository.save(job);
     }
@@ -69,7 +79,12 @@ public class JobService {
             }
             if (job.getSkills() != null){
                 List<Skill> skillList = job.getSkills();
-                skillList.removeIf(skill -> this.skillRepository.findById(skill.getId()) == null);
+                for (Skill skill : skillList) {
+                    Optional<Skill> s = this.skillRepository.findById(skill.getId());
+                    if (!s.isPresent()) {
+                        skillList.remove(skill);
+                    }
+                }
                 job.setSkills(skillList);
             }
             return this.jobRepository.save(job);

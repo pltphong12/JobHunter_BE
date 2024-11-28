@@ -47,7 +47,7 @@ public class SkillController {
     @GetMapping("/skills/{id}")
     @ApiMessage(value = "Fetch a skill")
     public ResponseEntity<Skill> getASkill(@PathVariable long id) throws IdInvalidException {
-        Skill skill = this.skillService.handleFetchASkill(id);
+        Skill skill = this.skillService.handleFetchASkill(id).get();
         if (skill == null) {
             throw new IdInvalidException("id is invalid");
         }

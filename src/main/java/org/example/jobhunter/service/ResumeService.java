@@ -1,7 +1,6 @@
 package org.example.jobhunter.service;
 
 import org.example.jobhunter.domain.Resume;
-import org.example.jobhunter.domain.Skill;
 import org.example.jobhunter.domain.response.ResPaginationDTO;
 import org.example.jobhunter.domain.response.resume.ResGetResumeDTO;
 import org.example.jobhunter.repository.ResumeRepository;
@@ -52,6 +51,7 @@ public class ResumeService {
             ResGetResumeDTO resGetResumeDTO = modelMapper.map(resume, ResGetResumeDTO.class);
             resGetResumeDTO.setJob(job);
             resGetResumeDTO.setUser(user);
+            resGetResumeDTO.setCompanyName(resume.getJob().getCompany().getName());
             page.add(resGetResumeDTO);
         }
 

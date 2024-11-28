@@ -1,7 +1,6 @@
 package org.example.jobhunter.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -12,33 +11,32 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "companies")
+@Table(name = "roles")
 @Getter
 @Setter
-public class Company {
-
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank(message = "Company name is not blank")
+    @NotBlank(message = "name isn't blank")
     private String name;
-    @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
-    private String address;
-    private String logo;
-
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Job> jobs;
+    private boolean active;
 
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 
-    @OneToMany(mappedBy = "company")
-    @JsonIgnore
-    private List<User> users;
+
+    @ManyToMany
+    @JsonIgnoreProperties(value = {"roles"})
+    @JoinTable(name = "permission_role",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    private List<Permission> permissions;
+
+
 
     @PrePersist
     public void handleBeforeCreate(){

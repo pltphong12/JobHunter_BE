@@ -1,6 +1,5 @@
 package org.example.jobhunter.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -12,33 +11,32 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "companies")
+@Table(name = "Permissions")
 @Getter
 @Setter
-public class Company {
-
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank(message = "Company name is not blank")
+    @NotBlank(message = "name isn't blank")
     private String name;
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String description;
-    private String address;
-    private String logo;
-
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Job> jobs;
+    @NotBlank(message = "ApiPath isn't blank")
+    private String apiPath;
+    @NotBlank(message = "Method isn't blank")
+    private String method;
+    @NotBlank(message = "Module isn't blank")
+    private String module;
 
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 
-    @OneToMany(mappedBy = "company")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "permissions")
     @JsonIgnore
-    private List<User> users;
+    List<Role> roles;
+
+
 
     @PrePersist
     public void handleBeforeCreate(){
@@ -52,3 +50,6 @@ public class Company {
         updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
     }
 }
+
+
+

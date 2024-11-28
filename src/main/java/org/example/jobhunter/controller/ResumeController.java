@@ -75,6 +75,7 @@ public class ResumeController {
         ResGetResumeDTO.ResUserInResumeDTO user = new ResGetResumeDTO.ResUserInResumeDTO(resume.getUser().getId(), resume.getUser().getName());
         resGetResumeDTO.setJob(job);
         resGetResumeDTO.setUser(user);
+        resGetResumeDTO.setCompanyName(resume.getJob().getCompany().getName());
         return ResponseEntity.ok().body(resGetResumeDTO);
     }
 
