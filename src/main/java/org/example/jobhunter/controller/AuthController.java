@@ -51,11 +51,13 @@ public class AuthController {
         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
                 currentUser.getId(),
                 currentUser.getEmail(),
-                currentUser.getName()
+                currentUser.getName(),
+                currentUser.getRole()
         );
-        String accessToken = this.securityUtil.createToken(authentication.getName(), userLogin);
-        resLoginDTO.setAccessToken(accessToken);
         resLoginDTO.setUser(userLogin);
+        String accessToken = this.securityUtil.createToken(authentication.getName(), resLoginDTO);
+        resLoginDTO.setAccessToken(accessToken);
+
         // Create refresh token
         String refreshToken = this.securityUtil.refreshToken(userLogin.getEmail(), resLoginDTO);
         // update user
@@ -77,7 +79,8 @@ public class AuthController {
         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
                 currentUser.getId(),
                 currentUser.getEmail(),
-                currentUser.getName()
+                currentUser.getName(),
+                currentUser.getRole()
         );
         ResUserGetAccount userGetAccount = new ResUserGetAccount(userLogin);
         return ResponseEntity.ok().body(userGetAccount);
@@ -100,13 +103,15 @@ public class AuthController {
         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
                 currentUser.getId(),
                 currentUser.getEmail(),
-                currentUser.getName()
+                currentUser.getName(),
+                currentUser.getRole()
         );
-        String accessToken = this.securityUtil.createToken(email, userLogin);
-        resLoginDTO.setAccessToken(accessToken);
         resLoginDTO.setUser(userLogin);
+        String accessToken = this.securityUtil.createToken(email, resLoginDTO);
+        resLoginDTO.setAccessToken(accessToken);
+
         // Create refresh token
-        String new_refreshToken = this.securityUtil.refreshToken(userLogin.getEmail(), resLoginDTO);
+        String new_refreshToken = this.securityUtil.refreshToken(email, resLoginDTO);
         // update user
         this.userService.updateUserToken(new_refreshToken, userLogin.getEmail());
         // set cookie
@@ -123,7 +128,7 @@ public class AuthController {
     public ResponseEntity<Void> logout() throws IdInvalidException {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : " ";
         // check access token
-        if (email.equals(" ")){
+        if (email.equals(" ")) {
             throw new IdInvalidException("Access Token invalid");
         }
         // update refresh token = null
@@ -134,6 +139,6 @@ public class AuthController {
                 .path("/")
                 .maxAge(0)
                 .build();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, springCookie.toString()).body(null);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, springCookie.toString()).build();
     }
 }

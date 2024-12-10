@@ -1,5 +1,6 @@
 package org.example.jobhunter.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -37,6 +38,9 @@ public class Role {
     private List<Permission> permissions;
 
 
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<User> users;
 
     @PrePersist
     public void handleBeforeCreate(){

@@ -27,7 +27,7 @@ public class GlobalException {
     })
     public ResponseEntity<RestResponse<Object>> handleException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
-        res.setStatus(HttpStatus.BAD_REQUEST.value());
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError(ex.getMessage());
         res.setMessage("Exception occurs...");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
@@ -38,7 +38,7 @@ public class GlobalException {
     })
     public ResponseEntity<RestResponse<Object>> handleNoResourceException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
-        res.setStatus(HttpStatus.NOT_FOUND.value());
+        res.setStatusCode(HttpStatus.NOT_FOUND.value());
         res.setError(ex.getMessage());
         res.setMessage("404 not found. url does not exist");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
@@ -49,7 +49,7 @@ public class GlobalException {
     })
     public ResponseEntity<RestResponse<Object>> handleStorage(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();
-        res.setStatus(HttpStatus.BAD_REQUEST.value());
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError(ex.getMessage());
         res.setMessage("Exception upload file");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
@@ -62,7 +62,7 @@ public class GlobalException {
         final List<FieldError> fieldErrors = result.getFieldErrors();
 
         RestResponse<Object> res = new RestResponse<>();
-        res.setStatus(HttpStatus.BAD_REQUEST.value());
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError(ex.getBody().getDetail());
 
         List<String> errors = fieldErrors.stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());

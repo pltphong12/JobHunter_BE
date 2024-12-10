@@ -100,4 +100,10 @@ public class ResumeController {
         this.resumeService.deleteResumeById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PostMapping("/resumes/by-user")
+    @ApiMessage("fetch resume by user")
+    public ResponseEntity<ResPaginationDTO> fetchResumeByUser(Pageable pageable) throws BadRequestException {
+        return ResponseEntity.ok().body(this.resumeService.fetchResumeByUser(pageable));
+    }
 }

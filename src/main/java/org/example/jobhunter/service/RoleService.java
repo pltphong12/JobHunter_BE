@@ -60,4 +60,12 @@ public class RoleService {
     public void deleteRole(long id){
         this.roleRepository.deleteById(id);
     }
+
+    public Role fetchRoleById(long id){
+        Optional<Role> role = this.roleRepository.findById(id);
+        if(role.isPresent()){
+            return role.get();
+        }
+        return null;
+    }
 }

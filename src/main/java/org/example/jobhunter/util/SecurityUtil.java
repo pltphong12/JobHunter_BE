@@ -37,7 +37,11 @@ public class SecurityUtil {
     @Value("${jobhunter.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    public String createToken(String email, ResLoginDTO.UserLogin userLogin) {
+    public String createToken(String email, ResLoginDTO userDTO) {
+        ResLoginDTO.UserInsideToken userInsideToken = new ResLoginDTO.UserInsideToken();
+        userInsideToken.setId(userDTO.getUser().getId());
+        userInsideToken.setEmail(userDTO.getUser().getEmail());
+        userInsideToken.setName(userDTO.getUser().getName());
         // Lay thoi gian thuc
         Instant now = Instant.now();
         // Tinh thoi gian het han token
@@ -51,7 +55,7 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", userLogin)
+                .claim("user", userInsideToken)
                 .claim("permissions", listAuthority)
                 .build();
         // Thuat toan ma hoa
@@ -62,6 +66,10 @@ public class SecurityUtil {
     }
 
     public String refreshToken(String email, ResLoginDTO userDTO) {
+        ResLoginDTO.UserInsideToken userInsideToken = new ResLoginDTO.UserInsideToken();
+        userInsideToken.setId(userDTO.getUser().getId());
+        userInsideToken.setEmail(userDTO.getUser().getEmail());
+        userInsideToken.setName(userDTO.getUser().getName());
         // Lay thoi gian thuc
         Instant now = Instant.now();
         // Tinh thoi gian het han token
@@ -72,7 +80,7 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", userDTO.getUser())
+                .claim("user", userInsideToken)
                 .build();
         // Thuat toan ma hoa
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

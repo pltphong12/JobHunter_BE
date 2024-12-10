@@ -1,10 +1,12 @@
 package org.example.jobhunter.service;
 
 import org.example.jobhunter.domain.Company;
+import org.example.jobhunter.domain.Role;
 import org.example.jobhunter.domain.response.ResPaginationDTO;
 import org.example.jobhunter.domain.response.ResUserDTO;
 import org.example.jobhunter.domain.User;
 import org.example.jobhunter.repository.CompanyRepository;
+import org.example.jobhunter.repository.RoleRepository;
 import org.example.jobhunter.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -23,22 +25,35 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, CompanyRepository companyRepository) {
+    public UserService(UserRepository userRepository, CompanyRepository companyRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
+        this.roleRepository = roleRepository;
     }
 
     public User handleCreateUser(User user) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        long companyId = user.getCompany().getId();
-        Optional<Company> company = this.companyRepository.findById(companyId);
+        Optional<Company> company = this.companyRepository.findById(user.getCompany() != null ? user.getCompany().getId() : null);
         if (company.isPresent()) {
             user.setCompany(company.get());
         }else {
             user.setCompany(null);
         }
+        Optional<Role> role = this.roleRepository.findById(user.getRole() != null ? user.getRole().getId() : null);
+        if (role.isPresent()) {
+            user.setRole(role.get());
+        }else {
+            user.setRole(null);
+        }
+        return userRepository.save(user);
+    }
+
+    public User handleRegisterUser(User user) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -79,6 +94,10 @@ public class UserService {
                 new ResUserDTO.ResCompany(
                         item.getCompany() != null ? item.getCompany().getId() : 0,
                         item.getCompany() != null ? item.getCompany().getName() : null
+                ),
+                new ResUserDTO.ResRole(
+                        item.getRole() != null ? item.getRole().getId() : 0,
+                        item.getRole() != null ? item.getRole().getName() : null
                 )
         )).collect(Collectors.toList());
 
@@ -105,6 +124,10 @@ public class UserService {
             Company company = this.companyRepository.findById(user.getCompany().getId()).orElse(null);
             if (user.getCompany() != null && company != null){
                 currentUser.setCompany(company);
+            }
+            Role role = this.roleRepository.findById(user.getRole().getId()).orElse(null);
+            if (user.getRole() != null && role != null){
+                currentUser.setRole(role);
             }
             return this.userRepository.save(currentUser);
         }

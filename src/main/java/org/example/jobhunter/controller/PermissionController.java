@@ -38,9 +38,6 @@ public class PermissionController {
         if (!this.permissionService.isPermission(newPermission)){
             throw new BadRequestException("Id is not a valid permission");
         }
-        if (this.permissionService.isPermissionExist(newPermission)) {
-            throw new BadRequestException("Permission already exist");
-        }
         Permission permission = this.permissionService.updatePermission(newPermission);
         return ResponseEntity.status(HttpStatus.CREATED).body(permission);
     }

@@ -45,6 +45,10 @@ public class User {
     @JsonIgnore
     private List<Resume> resumes;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     public enum GenderEnum{ FEMALE, MALE, OTHER }
 
     @PrePersist

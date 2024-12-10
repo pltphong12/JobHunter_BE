@@ -55,7 +55,7 @@ public class Job {
     private List<Resume> resumes;
 
     public enum LevelEnum {
-        INTERN, FRESHER, MIDDLE, SENIOR
+        INTERN, FRESHER, JUNIOR, MIDDLE, SENIOR
     }
 
     @PrePersist

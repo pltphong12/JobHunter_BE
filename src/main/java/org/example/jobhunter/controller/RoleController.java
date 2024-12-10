@@ -91,4 +91,13 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/roles/{id}")
+    @ApiMessage("fetch a role")
+    public ResponseEntity<Role> getRole(@PathVariable long id) throws BadRequestException {
+        if (!this.roleService.existId(id)) {
+            throw new BadRequestException("Id is not exist");
+        }
+        return ResponseEntity.ok(this.roleService.fetchRoleById(id));
+    }
+
 }

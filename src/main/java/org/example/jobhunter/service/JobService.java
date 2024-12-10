@@ -87,7 +87,7 @@ public class JobService {
                 }
                 job.setSkills(skillList);
             }
-            return this.jobRepository.save(job);
+            return this.jobRepository.save(currentJob.get());
         }
         return null;
     }
@@ -109,7 +109,7 @@ public class JobService {
 
     public Job handleFetchAJob(long id){
         Optional<Job> currentJob = this.jobRepository.findById(id);
-        return currentJob.orElse(null);
+        return currentJob.get();
     }
 
     public void handleDeleteAJob(long id){

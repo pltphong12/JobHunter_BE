@@ -84,20 +84,9 @@ public class JobController {
 
     @GetMapping("/jobs/{id}")
     @ApiMessage(value = "Fetch a Job")
-    public ResponseEntity<ResJobDTO> getJob(@PathVariable Long id) {
+    public ResponseEntity<Job> getJob(@PathVariable Long id) {
         Job job = this.jobService.handleFetchAJob(id);
-        ResJobDTO resJobDTO = ResJobDTO.fromJob(job);
-
-        List<Skill> skills = job.getSkills();
-        List<String> skillList = new ArrayList<>();
-        for (Skill skill : skills) {
-            Optional<Skill> fetchASkill = this.skillService.handleFetchASkill(skill.getId());
-            if (fetchASkill.isPresent()) {
-                skillList.add(fetchASkill.get().getName());
-            }
-        }
-        resJobDTO.setSkills(skillList);
-        return ResponseEntity.status(HttpStatus.OK).body(resJobDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(job);
     }
 
     @DeleteMapping("jobs/{id}")

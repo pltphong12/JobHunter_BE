@@ -30,7 +30,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("com.turkraft.springfilter:jpa:3.1.7")
     implementation("org.modelmapper:modelmapper:3.2.1")
-    runtimeOnly("com.mysql:mysql-connector-j")
+    implementation("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }

@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface RoleRepository extends JpaRepository<Role, Long> {
     boolean existsByName(String name);
     Page<Role> findAll(Specification<Role> specification, Pageable pageable);
+
+    Role findByName(String superAdmin);
 }
