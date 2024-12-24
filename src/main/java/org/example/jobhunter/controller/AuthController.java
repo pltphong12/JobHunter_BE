@@ -3,12 +3,14 @@ package org.example.jobhunter.controller;
 import jakarta.validation.Valid;
 import org.example.jobhunter.domain.request.ReqLoginDTO;
 import org.example.jobhunter.domain.response.ResLoginDTO;
+import org.example.jobhunter.domain.response.ResUserDTO;
 import org.example.jobhunter.domain.response.ResUserGetAccount;
 import org.example.jobhunter.domain.User;
 import org.example.jobhunter.exception.IdInvalidException;
 import org.example.jobhunter.service.UserService;
 import org.example.jobhunter.util.SecurityUtil;
 import org.example.jobhunter.util.anotation.ApiMessage;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,14 +27,16 @@ public class AuthController {
     private final SecurityUtil securityUtil;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @Value("${jobhunter.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, UserService userService) {
+    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, UserService userService, ModelMapper modelMapper) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/auth/login")
@@ -140,5 +144,17 @@ public class AuthController {
                 .maxAge(0)
                 .build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, springCookie.toString()).build();
+    }
+
+    @PostMapping("/auth/register")
+    @ApiMessage("register a account")
+    public ResponseEntity<ResUserDTO> register(@Valid @RequestBody User newUser) throws IdInvalidException {
+        if (this.userService.isExistEmail(newUser.getEmail())) {
+            throw new IdInvalidException("Email already in use");
+        }
+        User user = this.userService.handleRegisterUser(newUser);
+        ResUserDTO resUserDTO = modelMapper.map(user, ResUserDTO.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(resUserDTO);
     }
 }

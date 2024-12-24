@@ -106,7 +106,7 @@ public class UserController {
             throw new BadCredentialsException("user does not exist");
         }
         this.userService.handleDeleteUser(userId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
 

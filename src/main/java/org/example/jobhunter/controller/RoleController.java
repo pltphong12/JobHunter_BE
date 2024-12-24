@@ -88,7 +88,7 @@ public class RoleController {
             throw new BadRequestException("Id is not exist");
         }
         this.roleService.deleteRole(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/roles/{id}")

@@ -59,6 +59,6 @@ public class PermissionController {
             throw new BadRequestException("Id is not a valid permission");
         }
         this.permissionService.deletePermission(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

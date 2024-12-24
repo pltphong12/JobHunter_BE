@@ -86,6 +86,12 @@ public class ResumeService {
         FilterSpecification<Resume> spec = filterSpecificationConverter.convert(node);
         ResPaginationDTO rs = new ResPaginationDTO();
         Page<Resume> pageResume = this.resumeRepository.findAll(spec, pageable);
+        List<ResGetResumeDTO> page = new ArrayList<>();
+        for (Resume resume : pageResume.getContent()) {
+            ResGetResumeDTO resGetResumeDTO = modelMapper.map(resume, ResGetResumeDTO.class);
+            resGetResumeDTO.setCompanyName(resume.getJob().getCompany().getName());
+            page.add(resGetResumeDTO);
+        }
         ResPaginationDTO.Meta mt = new ResPaginationDTO.Meta();
         mt.setPage(pageable.getPageNumber() + 1);
         mt.setPageSize(pageResume.getSize());
@@ -95,7 +101,7 @@ public class ResumeService {
 
         rs.setMeta(mt);
 
-        rs.setResult(pageResume.getContent());
+        rs.setResult(page);
         return rs;
     }
 }

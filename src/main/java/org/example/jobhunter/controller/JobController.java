@@ -93,6 +93,6 @@ public class JobController {
     @ApiMessage(value = "Delete a job")
     public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
         this.jobService.handleDeleteAJob(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

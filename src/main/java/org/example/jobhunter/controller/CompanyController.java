@@ -64,6 +64,6 @@ public class CompanyController {
             throw new IdInvalidException("id must be an integer");
         }
         this.companyService.handleDeleteCompany(companyId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

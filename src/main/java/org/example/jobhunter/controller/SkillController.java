@@ -69,6 +69,6 @@ public class SkillController {
     @ApiMessage(value = "Delete a skill")
     public ResponseEntity<Void> deleteSkill(@PathVariable long id) throws IdInvalidException {
         this.skillService.handleDeleteASkill(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
