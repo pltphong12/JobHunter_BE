@@ -72,7 +72,7 @@ public class GlobalException {
     }
 
     @ExceptionHandler(value = {
-            StogareException.class
+            PermissionException.class
     })
     public ResponseEntity<RestResponse<Object>> handlePermissionException(Exception ex) {
         RestResponse<Object> res = new RestResponse<>();

@@ -7,7 +7,6 @@ import org.apache.coyote.BadRequestException;
 import org.example.jobhunter.domain.Permission;
 import org.example.jobhunter.domain.Role;
 import org.example.jobhunter.domain.User;
-import org.example.jobhunter.exception.PermissionException;
 import org.example.jobhunter.service.ResumeService;
 import org.example.jobhunter.service.UserService;
 import org.example.jobhunter.util.SecurityUtil;
@@ -51,14 +50,14 @@ public class PermissionInterceptor implements HandlerInterceptor {
 //                    String a = resume.getJob().getCompany().getName();
 //                    String b = user.getCompany().getName();
                     if (!isAllow) {
-                        throw new PermissionException("User don't permit access to " + path);
+                        throw new BadRequestException("User don't permit access to is allow " + path);
                     }
                     else {
                         return true;
                     }
                 }
                 else {
-                    throw new PermissionException("User don't permit access to " + path);
+                    throw new BadRequestException("User don't permit access to " + path);
                 }
             }
         }
