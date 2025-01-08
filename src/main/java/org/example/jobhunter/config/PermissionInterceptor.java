@@ -49,12 +49,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
 //                    Resume resume = this.resumeService.fetchResumeById(resumeId);
 //                    String a = resume.getJob().getCompany().getName();
 //                    String b = user.getCompany().getName();
-                    if (!isAllow) {
-                        throw new BadRequestException("User don't permit access to is allow " + path);
-                    }
-                    else {
-                        return true;
-                    }
+//                    if (!isAllow) {
+//                        throw new BadRequestException("User don't permit access to is allow " + path);
+//                    }
+//                    else {
+//                        return true;
+//                    }
                 }
                 else {
                     throw new BadRequestException("User don't permit access to " + path);
