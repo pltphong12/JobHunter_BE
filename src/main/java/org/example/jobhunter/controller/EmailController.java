@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class EmailController {
 
-    private final EmailService emailService;
     private final SubscriberService subscriberService;
 
-    public EmailController(EmailService emailService, SubscriberService subscriberService) {
-        this.emailService = emailService;
+    public EmailController(SubscriberService subscriberService) {
         this.subscriberService = subscriberService;
     }
 

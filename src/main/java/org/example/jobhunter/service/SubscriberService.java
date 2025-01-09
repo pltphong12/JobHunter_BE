@@ -60,6 +60,10 @@ public class SubscriberService {
         }
     }
 
+    public Subscriber findByEmail(String email) {
+        return this.subscriberRepository.findByEmail(email);
+    }
+
     public ResEmailJob convertJobToSendEmail(Job job) {
         ResEmailJob res = new ResEmailJob();
         res.setName(job.getName());

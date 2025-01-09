@@ -2,11 +2,11 @@ package org.example.jobhunter.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.example.jobhunter.repository.JobRepository;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -18,14 +18,16 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
-    private final JobRepository jobRepository;
 
-    public EmailService(JavaMailSender javaMailSender, SpringTemplateEngine templateEngine, JobRepository jobRepository) {
+    public EmailService(JavaMailSender javaMailSender, SpringTemplateEngine templateEngine) {
         this.javaMailSender = javaMailSender;
         this.templateEngine = templateEngine;
-        this.jobRepository = jobRepository;
     }
 
+//    @Scheduled(fixedRate = 5000)
+//    public void test(){
+//        System.out.println("test");
+//    }
 
     public void sendEmailSync(String to, String subject, String content, boolean isMultipart,
                               boolean isHtml) {

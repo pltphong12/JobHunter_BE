@@ -7,6 +7,7 @@ import org.example.jobhunter.domain.Subscriber;
 import org.example.jobhunter.service.SkillService;
 import org.example.jobhunter.service.SubscriberService;
 import org.example.jobhunter.service.UserService;
+import org.example.jobhunter.util.SecurityUtil;
 import org.example.jobhunter.util.anotation.ApiMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,5 +67,12 @@ public class SubscriberController {
         }
         Subscriber newSubscriber = subscriberService.updateSubscriber(subscriber);
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriber);
+    }
+
+    @PostMapping("/subscribers/skills")
+    @ApiMessage("get subscriber's skill")
+    public ResponseEntity<Subscriber> getSubscriberSkills() throws BadRequestException {
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : " ";
+        return ResponseEntity.ok().body(this.subscriberService.findByEmail(email));
     }
 }
