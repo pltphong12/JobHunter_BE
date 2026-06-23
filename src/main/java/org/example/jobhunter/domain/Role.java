@@ -1,7 +1,6 @@
 package org.example.jobhunter.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -28,15 +27,6 @@ public class Role {
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
-
-
-    @ManyToMany
-    @JsonIgnoreProperties(value = {"roles"})
-    @JoinTable(name = "permission_role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private List<Permission> permissions;
-
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     @JsonIgnore

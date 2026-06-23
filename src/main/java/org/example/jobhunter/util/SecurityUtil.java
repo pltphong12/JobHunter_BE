@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
@@ -15,8 +16,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,17 +45,16 @@ public class SecurityUtil {
         Instant now = Instant.now();
         // Tinh thoi gian het han token
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
-        // Set permission
-        List<String> listAuthority = new ArrayList<>();
-        listAuthority.add("ROLE_USER_CREATE");
-        listAuthority.add("ROLE_USER_UPDATE");
+        String roleName = userDTO.getUser().getRole() != null
+                ? userDTO.getUser().getRole().getName()
+                : "USER";
         // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
                 .claim("user", userInsideToken)
-                .claim("permissions", listAuthority)
+                .claim("role", roleName)
                 .build();
         // Thuat toan ma hoa
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
@@ -125,6 +123,30 @@ public class SecurityUtil {
             return s;
         }
         return null;
+    }
+
+    public static Optional<String> getCurrentUserRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return Optional.empty();
+        }
+
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .map(authority -> authority.substring("ROLE_".length()))
+                .findFirst();
+    }
+
+    public static boolean hasRole(String roleName) {
+        String expectedAuthority = roleName.startsWith("ROLE_") ? roleName : "ROLE_" + roleName;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(expectedAuthority::equals);
     }
 
 //    /**

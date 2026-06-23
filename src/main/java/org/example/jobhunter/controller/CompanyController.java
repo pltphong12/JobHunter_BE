@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +25,7 @@ public class CompanyController {
     }
 
     @PostMapping("/companies")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @ApiMessage(value = "create a company")
     public ResponseEntity<Company> addCompany(@Valid @RequestBody Company createCompany) {
         Company company = this.companyService.handleCreateCompany(createCompany);
@@ -47,6 +49,7 @@ public class CompanyController {
     }
 
     @PutMapping("/companies")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'HR')")
     @ApiMessage(value = "update a company")
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company updateCompany) {
         Company company = this.companyService.handleUpdateCompany(updateCompany);
@@ -55,6 +58,7 @@ public class CompanyController {
 
 
     @DeleteMapping("/companies/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @ApiMessage(value = "delete a company")
     public ResponseEntity<Void> deleteCompany(@PathVariable String id) throws IdInvalidException {
         long companyId;

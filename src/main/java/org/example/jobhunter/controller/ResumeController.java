@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class ResumeController {
     }
 
     @PostMapping("/resumes")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @ApiMessage(value = "Create a resume")
     public ResponseEntity<ResCreateResumeDTO> createResume(@RequestBody Resume resume) throws BadRequestException {
         Job job = this.jobService.handleFetchAJob(resume.getJob().getId());
@@ -64,6 +66,7 @@ public class ResumeController {
     }
 
     @PutMapping("/resumes")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'HR')")
     @ApiMessage(value = "Update a resume")
     public ResponseEntity<ResUpdateResumeDTO> updateResume(@RequestBody Resume resume) throws BadRequestException {
         if (this.resumeService.fetchResumeById(resume.getId()) == null) {
@@ -75,6 +78,7 @@ public class ResumeController {
     }
 
     @GetMapping("/resumes/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'HR', 'USER')")
     @ApiMessage(value = "fetch a resume by id")
     public ResponseEntity<ResGetResumeDTO> getResumeById(@PathVariable Long id) throws BadRequestException {
         Resume resume = this.resumeService.fetchResumeById(id);
@@ -91,6 +95,7 @@ public class ResumeController {
     }
 
     @GetMapping("/resumes")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'HR')")
     @ApiMessage(value = "fetch all resumes")
     public ResponseEntity<ResPaginationDTO> getAllResume(
             @Filter Specification<Resume> spec,
@@ -121,6 +126,7 @@ public class ResumeController {
     }
 
     @DeleteMapping("/resumes/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'HR', 'USER')")
     @ApiMessage(value = "delete a resume")
     public ResponseEntity<Void> deleteResume(@PathVariable("id") Long id) throws BadRequestException {
         Resume resume = this.resumeService.fetchResumeById(id);
@@ -132,6 +138,7 @@ public class ResumeController {
     }
 
     @PostMapping("/resumes/by-user")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @ApiMessage("fetch resume by user")
     public ResponseEntity<ResPaginationDTO> fetchResumeByUser(Pageable pageable) throws BadRequestException {
         return ResponseEntity.ok().body(this.resumeService.fetchResumeByUser(pageable));

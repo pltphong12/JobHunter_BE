@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import org.example.jobhunter.domain.User;
@@ -18,6 +19,7 @@ import org.example.jobhunter.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1")
+@PreAuthorize("hasRole('SUPER_ADMIN')")
 public class UserController {
     private final UserService userService;
     private final ModelMapper modelMapper;

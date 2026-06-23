@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class JobController {
     }
 
     @PostMapping("/jobs")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'HR')")
     @ApiMessage(value = "Create a job")
     public ResponseEntity<ResJobDTO> createJob(@Valid @RequestBody Job newJob) {
         ResJobDTO resJobDTO = new ResJobDTO();
@@ -54,6 +56,7 @@ public class JobController {
     }
 
     @PutMapping("/jobs")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'HR')")
     @ApiMessage(value = "Update a job")
     public ResponseEntity<ResJobDTO> updateJob(@Valid @RequestBody Job newJob) {
         ResJobDTO resJobDTO = new ResJobDTO();
@@ -90,6 +93,7 @@ public class JobController {
     }
 
     @DeleteMapping("jobs/{id}")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'HR')")
     @ApiMessage(value = "Delete a job")
     public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
         this.jobService.handleDeleteAJob(id);

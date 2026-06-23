@@ -31,12 +31,16 @@ public class RoleService {
         return this.roleRepository.save(role);
     }
 
+    public Role findByName(String name){
+        return this.roleRepository.findByName(name);
+    }
+
     public Role updateRole(Role role){
         Optional<Role> currentRole = this.roleRepository.findById(role.getId());
         if(currentRole.isPresent()){
             currentRole.get().setName(role.getName());
             currentRole.get().setDescription(role.getDescription());
-            currentRole.get().setPermissions(role.getPermissions());
+            currentRole.get().setActive(role.isActive());
             return this.roleRepository.save(currentRole.get());
         }
         return null;

@@ -3,31 +3,25 @@ package org.example.jobhunter.controller;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
-import org.example.jobhunter.domain.Permission;
 import org.example.jobhunter.domain.Role;
 import org.example.jobhunter.domain.response.ResPaginationDTO;
-import org.example.jobhunter.service.PermissionService;
 import org.example.jobhunter.service.RoleService;
 import org.example.jobhunter.util.anotation.ApiMessage;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
+@PreAuthorize("hasRole('SUPER_ADMIN')")
 public class RoleController {
     private final RoleService roleService;
-    private final PermissionService permissionService;
 
-    public RoleController(RoleService roleService, PermissionService permissionService) {
+    public RoleController(RoleService roleService) {
         this.roleService = roleService;
-        this.permissionService = permissionService;
     }
 
     @PostMapping("/roles")
@@ -36,15 +30,6 @@ public class RoleController {
         if (this.roleService.existName(newRole.getName())) {
             throw new BadRequestException("Name is exist");
         }
-        List<Permission> permissions = newRole.getPermissions();
-        List<Permission> newPermissions = new ArrayList<Permission>();
-        for(Permission permission : permissions) {
-            Permission newPermission = this.permissionService.getPermissionById(permission.getId());
-            if (newPermission != null) {
-                newPermissions.add(newPermission);
-            }
-        }
-        newRole.setPermissions(newPermissions);
         Role role = this.roleService.createRole(newRole);
         return ResponseEntity.status(HttpStatus.CREATED).body(role);
     }
@@ -55,18 +40,9 @@ public class RoleController {
         if (!this.roleService.existId(newRole.getId())) {
             throw new BadRequestException("Id is not exist");
         }
-        if (this.roleService.existName(newRole.getName())) {
+        if (this.roleService.existName(newRole.getName()) && newRole.getName() != this.roleService.fetchRoleById(newRole.getId()).getName()) {
             throw new BadRequestException("Name is exist");
         }
-        List<Permission> permissions = newRole.getPermissions();
-        List<Permission> newPermissions = new ArrayList<Permission>();
-        for(Permission permission : permissions) {
-            Permission newPermission = this.permissionService.getPermissionById(permission.getId());
-            if (newPermission != null) {
-                newPermissions.add(newPermission);
-            }
-        }
-        newRole.setPermissions(newPermissions);
         Role role = this.roleService.updateRole(newRole);
         return ResponseEntity.status(HttpStatus.CREATED).body(role);
     }

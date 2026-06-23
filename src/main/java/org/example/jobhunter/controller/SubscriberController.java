@@ -11,6 +11,7 @@ import org.example.jobhunter.util.SecurityUtil;
 import org.example.jobhunter.util.anotation.ApiMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class SubscriberController {
     }
 
     @PostMapping("/subscribers")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     public ResponseEntity<Subscriber> createSubscriber(@Valid @RequestBody Subscriber subscriber) throws BadRequestException {
         if (this.userService.isExistEmail(subscriber.getEmail())) {
             throw new BadRequestException("email already exist");
@@ -50,6 +52,7 @@ public class SubscriberController {
     }
 
     @PutMapping("/subscribers")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @ApiMessage("update subscribers")
     public ResponseEntity<Subscriber> updateSubscriber(@RequestBody Subscriber subscriber) throws BadRequestException {
         if (!this.subscriberService.isExistingSubscriber(subscriber)) {
@@ -70,6 +73,7 @@ public class SubscriberController {
     }
 
     @PostMapping("/subscribers/skills")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'USER')")
     @ApiMessage("get subscriber's skill")
     public ResponseEntity<Subscriber> getSubscriberSkills() throws BadRequestException {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : " ";

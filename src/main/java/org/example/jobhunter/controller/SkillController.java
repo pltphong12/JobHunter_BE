@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -25,6 +26,7 @@ public class SkillController {
     }
 
     @PostMapping("/skills")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @ApiMessage(value = "Create a skill")
     public ResponseEntity<Skill> createSkill(@Valid @RequestBody Skill newSkill) throws IdInvalidException {
         if (this.skillService.handleExistSkill(newSkill)) {
@@ -35,6 +37,7 @@ public class SkillController {
     }
 
     @PutMapping("/skills")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @ApiMessage(value = "Update a skill")
     public ResponseEntity<Skill> updateSkill(@Valid @RequestBody Skill updateSkill) throws IdInvalidException {
         if (this.skillService.handleExistSkill(updateSkill)) {
@@ -66,6 +69,7 @@ public class SkillController {
     }
 
     @DeleteMapping("/skills/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @ApiMessage(value = "Delete a skill")
     public ResponseEntity<Void> deleteSkill(@PathVariable long id) throws IdInvalidException {
         this.skillService.handleDeleteASkill(id);
