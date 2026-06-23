@@ -10,7 +10,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -33,6 +33,8 @@ dependencies {
     implementation("com.turkraft.springfilter:jpa:3.1.7")
     implementation("org.modelmapper:modelmapper:3.2.1")
     implementation("com.mysql:mysql-connector-j")
+    implementation("me.paulschwarz:spring-dotenv:4.0.0")
+    implementation("org.hibernate.common:hibernate-commons-annotations:6.0.6.Final")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
